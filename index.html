@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="SMART CARGO — авто, авиа и железнодорожные перевозки. Личный кабинет и заявки на доставку.">
+  <title>SMART CARGO — перевозки и личный кабинет</title>
+  <link rel="icon" href="https://cargosmart.kz/assets/images/logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #161b22;
+      --ink-2: #1e2630;
+      --slate: #2a3340;
+      --muted: #6d7582;
+      --line: #d8d0c4;
+      --paper: #f4efe6;
+      --card: #fffdf8;
+      --gold: #e4b018;
+      --gold-2: #f3cc4a;
+      --gold-ink: #3a2c00;
+      --ok: #1f7a4d;
+      --err: #b42318;
+      --shadow: 0 18px 50px rgba(22, 27, 34, .18);
+      --r: 18px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: Manrope, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.5;
+    }
+    h1, h2, h3, .brand-word {
+      font-family: Geologica, Manrope, sans-serif;
+      letter-spacing: -.03em;
+    }
+    a { color: inherit; }
+    img { max-width: 100%; display: block; }
+    button, input, select, textarea { font: inherit; }
+    .wrap { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+
+    .proto {
+      position: sticky; top: 0; z-index: 40;
+      background: #3a2c00; color: var(--gold-2);
+      font-size: 12px; letter-spacing: .04em;
+      text-align: center; padding: 8px 16px;
+    }
+
+    header {
+      position: sticky; top: 32px; z-index: 30;
+      backdrop-filter: blur(14px);
+      background: rgba(22, 27, 34, .92);
+      color: #f6f1e8;
+      border-bottom: 1px solid rgba(228, 176, 24, .25);
+    }
+    .nav {
+      display: flex; align-items: center; gap: 24px;
+      min-height: 72px;
+    }
+    .logo-link {
+      display: flex; align-items: center; gap: 12px;
+      text-decoration: none; color: inherit;
+    }
+    .logo-link img {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: #111; box-shadow: 0 0 0 2px var(--gold);
+    }
+    .logo-text { display: flex; flex-direction: column; line-height: 1.1; }
+    .logo-text b { font-family: Geologica, sans-serif; font-size: 15px; letter-spacing: .08em; }
+    .logo-text span { font-size: 10px; color: var(--gold); letter-spacing: .18em; text-transform: uppercase; }
+    nav { display: flex; gap: 18px; margin-left: auto; font-size: 14px; }
+    nav a { text-decoration: none; color: #d8d0c4; }
+    nav a:hover { color: #fff; }
+    .lang {
+      display: flex; border: 1px solid rgba(228,176,24,.4); border-radius: 999px; overflow: hidden;
+      font-size: 12px; font-weight: 700;
+    }
+    .lang button {
+      border: 0; background: transparent; color: #d8d0c4;
+      padding: 6px 10px; cursor: pointer;
+    }
+    .lang button.is-on { background: var(--gold); color: var(--gold-ink); }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      border-radius: 999px; border: 0; cursor: pointer;
+      padding: 12px 20px; font-weight: 700; text-decoration: none;
+      transition: transform .15s ease, background .15s ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-gold { background: var(--gold); color: var(--gold-ink); }
+    .btn-ghost { background: transparent; color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.28); }
+    .btn-ink { background: var(--ink); color: #fff; }
+    .btn-wide { width: 100%; }
+    .btn-lg { padding: 14px 22px; font-size: 16px; }
+
+    .hero {
+      background:
+        radial-gradient(900px 420px at 85% 10%, rgba(228,176,24,.22), transparent 60%),
+        linear-gradient(160deg, #12171e 0%, #1c2430 48%, #141920 100%);
+      color: #f6f1e8;
+      overflow: hidden;
+      position: relative;
+    }
+    .hero::after {
+      content: "";
+      position: absolute; left: -10%; right: -10%; bottom: -40px;
+      height: 90px; background: var(--gold);
+      transform: rotate(-2.2deg);
+      opacity: .92;
+    }
+    .hero-grid {
+      display: grid; grid-template-columns: 1.15fr .85fr;
+      gap: 48px; align-items: center;
+      padding: 72px 0 110px;
+      position: relative; z-index: 1;
+    }
+    .kicker {
+      color: var(--gold); font-size: 12px; font-weight: 700;
+      letter-spacing: .22em; text-transform: uppercase;
+      margin: 0 0 14px;
+    }
+    h1 { font-size: clamp(36px, 5vw, 64px); line-height: 1.02; margin: 0 0 18px; }
+    .lede { font-size: 18px; color: #cfc6b8; max-width: 38ch; margin: 0 0 28px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .route {
+      display: flex; align-items: center; gap: 0;
+      margin-top: 36px; color: #b8b0a4; font-size: 12px; letter-spacing: .16em;
+    }
+    .route span { font-weight: 700; color: #fff; }
+    .route i {
+      flex: 1; height: 1px; background: linear-gradient(90deg, var(--gold), transparent);
+      margin: 0 10px; min-width: 28px; display: block;
+    }
+    .hero-mark {
+      justify-self: center;
+      width: min(340px, 100%);
+      filter: drop-shadow(0 30px 40px rgba(0,0,0,.35));
+    }
+    .hero-mark img { width: 100%; border-radius: 50%; }
+
+    .modes { padding: 72px 0 24px; }
+    .sec-head { max-width: 40ch; margin-bottom: 28px; }
+    .sec-head h2 { font-size: 34px; margin: 0 0 8px; }
+    .sec-head p { margin: 0; color: var(--muted); }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--r);
+      padding: 22px;
+      box-shadow: 0 8px 24px rgba(22,27,34,.04);
+    }
+    .card .ico {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: var(--ink); color: var(--gold);
+      display: grid; place-items: center; margin-bottom: 14px;
+    }
+    .card h3 { margin: 0 0 8px; font-size: 20px; }
+    .card p { margin: 0; color: var(--muted); }
+
+    .how { padding: 48px 0 72px; }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .step {
+      padding: 8px 8px 8px 0;
+      border-top: 3px solid var(--gold);
+    }
+    .step b { display: block; font-size: 13px; color: var(--gold-ink); background: var(--gold); width: max-content; padding: 2px 8px; border-radius: 999px; margin: 14px 0 10px; }
+    .step h3 { margin: 0 0 8px; }
+    .step p { margin: 0; color: var(--muted); }
+
+    .split {
+      background: var(--ink);
+      color: #f6f1e8;
+      padding: 56px 0;
+    }
+    .split .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+    .split p { color: #cfc6b8; }
+    .note { font-size: 13px; color: #9aa1ab; }
+
+    footer {
+      background: #10141a; color: #cfc6b8; padding: 36px 0 28px;
+      font-size: 14px;
+    }
+    .foot { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 24px; }
+    footer strong { color: #fff; }
+    .ex { opacity: .7; font-size: 12px; }
+
+    .view { display: none; }
+    .view.is-on { display: block; min-height: calc(100vh - 104px); }
+
+    .auth {
+      background:
+        radial-gradient(700px 280px at 0% 0%, rgba(228,176,24,.18), transparent 55%),
+        var(--ink);
+      color: #f6f1e8;
+    }
+    .auth-grid {
+      display: grid; grid-template-columns: .9fr 1.1fr;
+      gap: 48px; align-items: center;
+      padding: 48px 0 72px;
+    }
+    .auth-copy h1 { font-size: 42px; margin: 0 0 12px; }
+    .auth-card {
+      background: var(--card); color: var(--ink);
+      border-radius: 24px; padding: 32px;
+      box-shadow: var(--shadow);
+      border-top: 6px solid var(--gold);
+    }
+    .auth-card h2 { margin: 0 0 6px; font-size: 26px; }
+    .auth-card .sub { margin: 0 0 22px; color: var(--muted); }
+    label { display: block; font-size: 13px; font-weight: 700; margin: 0 0 6px; }
+    .field { margin-bottom: 14px; }
+    input, select, textarea {
+      width: 100%; border: 1px solid var(--line); border-radius: 12px;
+      padding: 12px 14px; background: #fff; color: var(--ink); outline: none;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(228,176,24,.25); }
+    .passwrap { display: flex; }
+    .passwrap input { border-radius: 12px 0 0 12px; }
+    .passwrap button {
+      border: 1px solid var(--line); border-left: 0; background: #fff;
+      border-radius: 0 12px 12px 0; padding: 0 12px; cursor: pointer; color: var(--slate);
+    }
+    .row-between { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 8px 0 18px; font-size: 14px; }
+    .check { display: flex; align-items: center; gap: 8px; }
+    .check input { width: auto; }
+    .link { color: var(--slate); font-weight: 600; }
+    .flash {
+      display: none; margin: 0 0 14px; padding: 10px 12px; border-radius: 10px;
+      background: #e8f6ee; color: var(--ok); font-size: 14px;
+    }
+    .flash.is-on { display: block; }
+    .back { display: inline-flex; gap: 6px; margin-bottom: 18px; color: #cfc6b8; text-decoration: none; font-size: 14px; }
+
+    .request-page { padding: 48px 0 72px; }
+    .request-card {
+      width: min(560px, 100%); margin: 0 auto;
+      background: var(--card); border-radius: 24px; padding: 32px;
+      border: 1px solid var(--line); box-shadow: var(--shadow);
+    }
+
+    @media (max-width: 860px) {
+      header { top: 40px; }
+      .nav { flex-wrap: wrap; padding: 10px 0; }
+      nav { margin: 0; width: 100%; order: 5; }
+      .hero-grid, .cards, .steps, .split .wrap, .auth-grid, .foot {
+        grid-template-columns: 1fr;
+      }
+      .hero-mark { width: 220px; }
+      .hero::after { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="proto" data-i18n="proto">Прототип интерфейса. Формы никуда не отправляются. Телефон, BIN и адрес — заглушки.</div>
+
+  <header>
+    <div class="wrap nav">
+      <a class="logo-link" href="#home" data-go="home">
+        <img src="https://cargosmart.kz/assets/images/logo.png" width="48" height="48" alt="SMART CARGO — авто, авиа, ЖД">
+        <span class="logo-text"><b>SMART CARGO</b><span>авто · авиа · жд</span></span>
+      </a>
+      <nav>
+        <a href="#modes" data-go="home" data-i18n="nav_modes">Направления</a>
+        <a href="#how" data-go="home" data-i18n="nav_how">Как это работает</a>
+        <a href="#contacts" data-go="home" data-i18n="nav_contacts">Контакты</a>
+      </nav>
+      <div class="lang" role="group" aria-label="Язык">
+        <button type="button" id="lang-ru" class="is-on">RU</button>
+        <button type="button" id="lang-kk">KZ</button>
+      </div>
+      <a class="btn btn-gold" href="#login" data-go="login" data-i18n="nav_login">Войти</a>
+    </div>
+  </header>
+
+  <main id="view-home" class="view is-on">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="kicker" data-i18n="kicker">Авто · авиа · железная дорога</p>
+          <h1 data-i18n="hero_title">Груз едет. Вы видите статус.</h1>
+          <p class="lede" data-i18n="hero_lede">SMART CARGO собирает перевозку и кабинет в одном месте: заявка, документы, маршрут. Не фиолетовая админка — компания, которой можно написать.</p>
+          <div class="hero-actions">
+            <a class="btn btn-gold btn-lg" href="#request" data-go="request" data-i18n="cta_request">Оставить заявку</a>
+            <a class="btn btn-ghost btn-lg" href="#login" data-go="login" data-i18n="cta_login">Войти в кабинет</a>
+          </div>
+          <div class="route" aria-hidden="true"><span>АЛМ</span><i></i><span>АСТ</span><i></i><span>ШЫМ</span><i></i><span>АКТ</span></div>
+        </div>
+        <div class="hero-mark">
+          <img src="https://cargosmart.kz/assets/images/logo.png" alt="Эмблема SMART CARGO: фура, авто, авиа и железная дорога">
+        </div>
+      </div>
+    </section>
+
+    <section class="modes" id="modes">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2 data-i18n="modes_title">Три способа доставить груз</h2>
+          <p data-i18n="modes_lead">Тот же знак, что на фуре: не три разных продукта, а одна логистика.</p>
+        </div>
+        <div class="cards">
+          <article class="card">
+            <div class="ico" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 16V8h11v8H3Zm11-4h4l3 3v3h-7v-6Z" stroke="currentColor" stroke-width="1.7"/><circle cx="7" cy="18" r="2" fill="currentColor"/><circle cx="18" cy="18" r="2" fill="currentColor"/></svg>
+            </div>
+            <h3 data-i18n="m1_t">Авто</h3>
+            <p data-i18n="m1_p">Сборные и выделенные машины по Казахстану и дальше. Понятный срок и трек заявки.</p>
+          </article>
+          <article class="card">
+            <div class="ico" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 12l18-7-4 14-5-4-3 4-1-5-5-2Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+            </div>
+            <h3 data-i18n="m2_t">Авиа</h3>
+            <p data-i18n="m2_p">Когда груз не может ждать фуру. Короткая заявка, статус до посадки и выдачи.</p>
+          </article>
+          <article class="card">
+            <div class="ico" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 16h16M5 16V8h9l5 4v4M8 19a2 2 0 1 1 0 .01M16 19a2 2 0 1 1 0 .01" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            </div>
+            <h3 data-i18n="m3_t">Железная дорога</h3>
+            <p data-i18n="m3_p">Контейнеры и вагоны, когда объём важнее скорости. Документы остаются в кабинете.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="how" id="how">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2 data-i18n="how_title">Как это работает</h2>
+          <p data-i18n="how_lead">Четыре шага без «войти, чтобы понять, кто мы».</p>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <b>01</b>
+            <h3 data-i18n="h1_t">Заявка с сайта</h3>
+            <p data-i18n="h1_p">Город, груз, срок. Не обязательно иметь кабинет с первого касания.</p>
+          </div>
+          <div class="step">
+            <b>02</b>
+            <h3 data-i18n="h2_t">Расчёт и маршрут</h3>
+            <p data-i18n="h2_p">Менеджер подтверждает способ: авто, авиа или ЖД — и сроки.</p>
+          </div>
+          <div class="step">
+            <b>03</b>
+            <h3 data-i18n="h3_t">Кабинет по делу</h3>
+            <p data-i18n="h3_p">Статус, файлы, счета. Вход — для тех, кто уже везёт, не вместо витрины.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="split" id="cabinet">
+      <div class="wrap">
+        <div>
+          <p class="kicker" data-i18n="cab_kicker">Личный кабинет</p>
+          <h2 data-i18n="cab_title">Вход больше не вся компания</h2>
+          <p data-i18n="cab_p">Сейчас на cargosmart.kz сразу форма логина. В этой версии кабинет — отдельная дверь: email, пароль, «запомнить меня» выключено, восстановление с нормальным полем email.</p>
+        </div>
+        <div>
+          <a class="btn btn-gold btn-lg" href="#login" data-go="login" data-i18n="cta_login">Войти в кабинет</a>
+          <p class="note" style="margin-top:14px" data-i18n="cab_note">Сессию в бою стоит ставить с HttpOnly, Secure и SameSite. Это уже не макет, а сервер.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <main id="view-login" class="view auth">
+    <div class="wrap auth-grid">
+      <div class="auth-copy">
+        <a class="back" href="#home" data-go="home" data-i18n="back">← На главную</a>
+        <p class="kicker" data-i18n="login_kicker">Личный кабинет</p>
+        <h1 data-i18n="login_title">Войдите, чтобы видеть свои перевозки</h1>
+        <p data-i18n="login_lede">Один заголовок, одно поле email, пароль скрыт. Без капса и без «запомнить» по умолчанию.</p>
+      </div>
+      <div class="auth-card">
+        <img src="https://cargosmart.kz/assets/images/logo.png" alt="SMART CARGO" width="72" height="72" style="border-radius:50%;margin-bottom:16px">
+        <h2 data-i18n="login_card">Вход в кабинет</h2>
+        <p class="sub" data-i18n="login_sub">Для клиентов с действующим договором.</p>
+        <div class="flash" id="login-flash" data-i18n="proto_ok">Прототип: данные не уходят на сервер.</div>
+        <form id="form-login" action="#" method="post" novalidate>
+          <div class="field">
+            <label for="login-email" data-i18n="email">Email</label>
+            <input id="login-email" name="email" type="email" autocomplete="username" required placeholder="name@company.kz">
+          </div>
+          <div class="field">
+            <label for="login-pass" data-i18n="password">Пароль</label>
+            <div class="passwrap">
+              <input id="login-pass" name="password" type="password" autocomplete="current-password" required placeholder="••••••••">
+              <button type="button" id="toggle-pass" aria-label="Показать пароль">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6Z" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.7"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="row-between">
+            <label class="check">
+              <input type="checkbox" name="remember_me" value="1">
+              <span data-i18n="remember">Запомнить меня</span>
+            </label>
+            <a class="link" href="#forgot" data-go="forgot" data-i18n="forgot">Забыли пароль?</a>
+          </div>
+          <button class="btn btn-ink btn-wide btn-lg" type="submit">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.8"/></svg>
+            <span data-i18n="submit_login">Войти</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <main id="view-forgot" class="view auth">
+    <div class="wrap auth-grid">
+      <div class="auth-copy">
+        <a class="back" href="#login" data-go="login" data-i18n="back_login">← К входу</a>
+        <p class="kicker" data-i18n="forgot_kicker">Восстановление</p>
+        <h1 data-i18n="forgot_title">Сбросим пароль на почту</h1>
+        <p data-i18n="forgot_lede">Поле email с именем name="email". Без заглушки «Content» и без мёртвого скрипта показа пароля.</p>
+      </div>
+      <div class="auth-card">
+        <h2 data-i18n="forgot_card">Забыли пароль?</h2>
+        <p class="sub" data-i18n="forgot_sub">Укажите email, с которым регистрировали кабинет.</p>
+        <div class="flash" id="forgot-flash"></div>
+        <form id="form-forgot" action="#" method="post">
+          <div class="field">
+            <label for="fp-email" data-i18n="email">Email</label>
+            <input id="fp-email" name="email" type="email" autocomplete="email" required placeholder="name@company.kz">
+          </div>
+          <button class="btn btn-ink btn-wide btn-lg" type="submit" data-i18n="submit_forgot">Отправить ссылку</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <main id="view-request" class="view">
+    <div class="wrap request-page">
+      <a class="back" href="#home" data-go="home" style="color:var(--slate)" data-i18n="back">← На главную</a>
+      <div class="request-card">
+        <p class="kicker" data-i18n="req_kicker">Заявка</p>
+        <h2 data-i18n="req_title">Расскажите, что везём</h2>
+        <p class="sub" style="color:var(--muted)" data-i18n="req_sub">Прототип формы. В бою уйдёт менеджеру, не в пустой POST.</p>
+        <div class="flash" id="req-flash"></div>
+        <form id="form-request" action="#" method="post">
+          <div class="field">
+            <label for="req-name" data-i18n="req_name">Имя и компания</label>
+            <input id="req-name" name="name" required placeholder="Алия, ТОО Пример">
+          </div>
+          <div class="field">
+            <label for="req-phone" data-i18n="req_phone">Телефон</label>
+            <input id="req-phone" name="phone" type="tel" required placeholder="+7 7xx xxx xx xx">
+          </div>
+          <div class="field">
+            <label for="req-route" data-i18n="req_route">Откуда → куда</label>
+            <input id="req-route" name="route" required placeholder="Алматы → Астана">
+          </div>
+          <div class="field">
+            <label for="req-mode" data-i18n="req_mode">Способ</label>
+            <select id="req-mode" name="mode">
+              <option data-i18n="m1_t" value="auto">Авто</option>
+              <option data-i18n="m2_t" value="air">Авиа</option>
+              <option data-i18n="m3_t" value="rail">Железная дорога</option>
+              <option data-i18n="req_any" value="any">Подскажите сами</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="req-note" data-i18n="req_note">Груз и сроки</label>
+            <textarea id="req-note" name="note" rows="4" placeholder="Вес, объём, когда забрать"></textarea>
+          </div>
+          <button class="btn btn-gold btn-wide btn-lg" type="submit" data-i18n="submit_req">Отправить заявку</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer id="contacts">
+    <div class="wrap foot">
+      <div>
+        <strong>SMART CARGO</strong>
+        <p data-i18n="foot_about">Авто, авиа и железнодорожные перевозки. Домен cargosmart.kz — кабинет и витрина одной компании.</p>
+      </div>
+      <div>
+        <strong data-i18n="foot_contacts">Контакты</strong>
+        <p class="ex" data-i18n="foot_phone">Телефон и WhatsApp — подставить боевые</p>
+        <p class="ex" data-i18n="foot_mail">hello@cargosmart.kz — пример, не подтверждён</p>
+      </div>
+      <div>
+        <strong data-i18n="foot_legal">Реквизиты</strong>
+        <p class="ex" data-i18n="foot_bin">BIN / адрес офиса — подставить из юр. карточки. Здесь не выдуманы.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const i18n = {
+      ru: {
+        proto: "Прототип интерфейса. Формы никуда не отправляются. Телефон, BIN и адрес — заглушки.",
+        nav_modes: "Направления", nav_how: "Как это работает", nav_contacts: "Контакты", nav_login: "Войти",
+        kicker: "Авто · авиа · железная дорога",
+        hero_title: "Груз едет. Вы видите статус.",
+        hero_lede: "SMART CARGO собирает перевозку и кабинет в одном месте: заявка, документы, маршрут. Не фиолетовая админка — компания, которой можно написать.",
+        cta_request: "Оставить заявку", cta_login: "Войти в кабинет",
+        modes_title: "Три способа доставить груз",
+        modes_lead: "Тот же знак, что на фуре: не три разных продукта, а одна логистика.",
+        m1_t: "Авто", m1_p: "Сборные и выделенные машины по Казахстану и дальше. Понятный срок и трек заявки.",
+        m2_t: "Авиа", m2_p: "Когда груз не может ждать фуру. Короткая заявка, статус до посадки и выдачи.",
+        m3_t: "Железная дорога", m3_p: "Контейнеры и вагоны, когда объём важнее скорости. Документы остаются в кабинете.",
+        how_title: "Как это работает", how_lead: "Сначала компания, потом пароль.",
+        h1_t: "Заявка с сайта", h1_p: "Город, груз, срок. Кабинет не обязателен с первого касания.",
+        h2_t: "Расчёт и маршрут", h2_p: "Подтверждаем способ: авто, авиа или ЖД — и сроки.",
+        h3_t: "Кабинет по делу", h3_p: "Статус, файлы, счета. Вход для тех, кто уже везёт.",
+        cab_kicker: "Личный кабинет", cab_title: "Вход больше не вся компания",
+        cab_p: "Сейчас на cargosmart.kz сразу форма логина. Здесь кабинет — отдельная дверь: email, пароль, «запомнить меня» выключено.",
+        cab_note: "Сессию в бою стоит ставить с HttpOnly, Secure и SameSite.",
+        back: "← На главную", back_login: "← К входу",
+        login_kicker: "Личный кабинет", login_title: "Войдите, чтобы видеть свои перевозки",
+        login_lede: "Один заголовок, поле email, пароль скрыт. Без капса и без «запомнить» по умолчанию.",
+        login_card: "Вход в кабинет", login_sub: "Для клиентов с действующим договором.",
+        proto_ok: "Прототип: данные не уходят на сервер.",
+        email: "Email", password: "Пароль", remember: "Запомнить меня", forgot: "Забыли пароль?",
+        submit_login: "Войти",
+        forgot_kicker: "Восстановление", forgot_title: "Сбросим пароль на почту",
+        forgot_lede: "Поле email отправляется как name=\"email\". Без заглушки Content.",
+        forgot_card: "Забыли пароль?", forgot_sub: "Укажите email, с которым регистрировали кабинет.",
+        submit_forgot: "Отправить ссылку",
+        req_kicker: "Заявка", req_title: "Расскажите, что везём",
+        req_sub: "Прототип формы. В бою уйдёт менеджеру.",
+        req_name: "Имя и компания", req_phone: "Телефон", req_route: "Откуда → куда",
+        req_mode: "Способ", req_any: "Подскажите сами", req_note: "Груз и сроки",
+        submit_req: "Отправить заявку",
+        foot_about: "Авто, авиа и железнодорожные перевозки. Домен cargosmart.kz — витрина и кабинет одной компании.",
+        foot_contacts: "Контакты", foot_phone: "Телефон и WhatsApp — подставить боевые",
+        foot_mail: "hello@cargosmart.kz — пример, не подтверждён",
+        foot_legal: "Реквизиты", foot_bin: "BIN и адрес офиса — подставить из юр. карточки. Здесь не выдуманы.",
+        forgot_ok: "Если такой email есть, отправим ссылку. В прототипе письмо не уходит.",
+        req_ok: "Заявку приняли бы в работу. В прототипе она остаётся в браузере."
+      },
+      kk: {
+        proto: "Интерфейс прототипі. Формалар серверге кетпейді. Телефон, БСН, мекенжай — үлгі.",
+        nav_modes: "Бағыттар", nav_how: "Қалай жұмыс істейді", nav_contacts: "Байланыс", nav_login: "Кіру",
+        kicker: "Авто · авиа · теміржол",
+        hero_title: "Жүк жолда. Сіз мәртебені көресіз.",
+        hero_lede: "SMART CARGO тасымал мен кабинетті бір жерге жинайды: өтінім, құжаттар, маршрут. Күлгін админка емес — хабарласуға болатын компания.",
+        cta_request: "Өтінім қалдыру", cta_login: "Кабинетке кіру",
+        modes_title: "Жүкті жеткізудің үш жолы",
+        modes_lead: "Фурадағы сол таңба: үш бөлек өнім емес, бір логистика.",
+        m1_t: "Авто", m1_p: "Қазақстан бойынша және одан әрі жиынтық әрі бөлек машиналар. Түсінікті мерзім.",
+        m2_t: "Авиа", m2_p: "Жүк фураны күте алмағанда. Қысқа өтінім, мәртебе қонғанша.",
+        m3_t: "Теміржол", m3_p: "Көлем жылдамдықтан маңызды болғанда контейнер мен вагон. Құжаттар кабинетте.",
+        how_title: "Қалай жұмыс істейді", how_lead: "Алдымен компания, сосын құпиясөз.",
+        h1_t: "Сайттан өтінім", h1_p: "Қала, жүк, мерзім. Бірінші қадамда кабинет міндетті емес.",
+        h2_t: "Есеп пен маршрут", h2_p: "Авто, авиа немесе теміржолды және мерзімді растаймыз.",
+        h3_t: "Іске қажет кабинет", h3_p: "Мәртебе, файл, шот. Кіру — жүкті әлдеқашан тасығандарға.",
+        cab_kicker: "Жеке кабинет", cab_title: "Кіру енді бүкіл компания емес",
+        cab_p: "Қазір cargosmart.kz-те бірден логин. Мұнда кабинет — бөлек есік, «мені есте сақтау» өшірулі.",
+        cab_note: "Жұмыс сессиясына HttpOnly, Secure және SameSite қойған жөн.",
+        back: "← Басты бетке", back_login: "← Кіруге",
+        login_kicker: "Жеке кабинет", login_title: "Тасымалыңызды көру үшін кіріңіз",
+        login_lede: "Бір тақырып, email, жасырын құпиясөз. Бас әріпсіз, есте сақтау өшірулі.",
+        login_card: "Кабинетке кіру", login_sub: "Қолданыстағы шарты бар клиенттерге.",
+        proto_ok: "Прототип: дерек серверге кетпейді.",
+        email: "Email", password: "Құпиясөз", remember: "Мені есте сақтау", forgot: "Құпиясөзді ұмыттыңыз ба?",
+        submit_login: "Кіру",
+        forgot_kicker: "Қалпына келтіру", forgot_title: "Құпиясөзді поштаға жібереміз",
+        forgot_lede: "Email өрісі name=\"email\" болып кетеді. Content деген қалдық жоқ.",
+        forgot_card: "Құпиясөзді ұмыттыңыз ба?", forgot_sub: "Кабинет тіркелген email-ді жазыңыз.",
+        submit_forgot: "Сілтеме жіберу",
+        req_kicker: "Өтінім", req_title: "Нені таситынымызды айтыңыз",
+        req_sub: "Форма прототипі. Жұмыста менеджерге кетеді.",
+        req_name: "Аты және компания", req_phone: "Телефон", req_route: "Қайдан → қайда",
+        req_mode: "Тәсіл", req_any: "Өздеріңіз ұсыныңыз", req_note: "Жүк және мерзім",
+        submit_req: "Өтінім жіберу",
+        foot_about: "Авто, авиа және теміржол тасымалы. cargosmart.kz — бір компанияның витринасы мен кабинеті.",
+        foot_contacts: "Байланыс", foot_phone: "Телефон мен WhatsApp — нақтысын қою",
+        foot_mail: "hello@cargosmart.kz — үлгі, расталмаған",
+        foot_legal: "Реквизиттер", foot_bin: "БСН мен офис мекенжайын заңды карточкадан қойыңыз. Мұнда ойдан шығарылмаған.",
+        forgot_ok: "Мұндай email болса, сілтеме кетер еді. Прототипте хат кетпейді.",
+        req_ok: "Өтінімді жұмысқа алар едік. Прототипте ол браузерде қалады."
+      }
+    };
+
+    let lang = "ru";
+    function applyLang() {
+      const dict = i18n[lang];
+      document.documentElement.lang = lang === "kk" ? "kk" : "ru";
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (dict[key]) el.textContent = dict[key];
+      });
+      document.getElementById("lang-ru").classList.toggle("is-on", lang === "ru");
+      document.getElementById("lang-kk").classList.toggle("is-on", lang === "kk");
+    }
+    document.getElementById("lang-ru").onclick = () => { lang = "ru"; applyLang(); };
+    document.getElementById("lang-kk").onclick = () => { lang = "kk"; applyLang(); };
+
+    const views = ["home", "login", "forgot", "request"];
+    function show(name) {
+      views.forEach((v) => {
+        document.getElementById("view-" + v).classList.toggle("is-on", v === name);
+      });
+      window.scrollTo(0, 0);
+    }
+    function fromHash() {
+      const name = (location.hash || "#home").slice(1);
+      show(views.includes(name) ? name : "home");
+    }
+    document.querySelectorAll("[data-go]").forEach((el) => {
+      el.addEventListener("click", (e) => {
+        const name = el.getAttribute("data-go");
+        if (!views.includes(name)) return;
+        e.preventDefault();
+        location.hash = name;
+      });
+    });
+    window.addEventListener("hashchange", fromHash);
+    fromHash();
+
+    const pass = document.getElementById("login-pass");
+    document.getElementById("toggle-pass").addEventListener("click", () => {
+      const on = pass.type === "password";
+      pass.type = on ? "text" : "password";
+    });
+
+    document.getElementById("form-login").addEventListener("submit", (e) => {
+      e.preventDefault();
+      document.getElementById("login-flash").classList.add("is-on");
+    });
+    document.getElementById("form-forgot").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const box = document.getElementById("forgot-flash");
+      box.textContent = i18n[lang].forgot_ok;
+      box.classList.add("is-on");
+    });
+    document.getElementById("form-request").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const box = document.getElementById("req-flash");
+      box.textContent = i18n[lang].req_ok;
+      box.classList.add("is-on");
+    });
+  </script>
+</body>
+</html>
