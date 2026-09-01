@@ -37,6 +37,9 @@
       font-family: Unbounded, Onest, sans-serif;
       letter-spacing: -.04em;
       font-weight: 700;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      max-width: 100%;
     }
     a { color: inherit; }
     img { max-width: 100%; display: block; }
@@ -404,22 +407,37 @@
       .hero-grid, .cards, .steps, .split, .auth-grid, .foot { grid-template-columns: 1fr; }
       .hero-mark { width: min(200px, 58vw); order: -1; margin: 0 auto 8px; }
       .hero-grid { gap: 20px; text-align: center; }
-      .lede { margin-left: auto; margin-right: auto; font-size: 16px; }
-      .kicker { letter-spacing: .18em; }
-      h1 { font-size: clamp(28px, 8vw, 38px); padding-inline: 2px; }
+      .lede { margin-left: auto; margin-right: auto; font-size: 16px; max-width: 34ch; }
+      .kicker { letter-spacing: .14em; font-size: 10px; }
+      h1 {
+        font-size: clamp(26px, 7.2vw, 34px);
+        line-height: 1.08;
+        letter-spacing: -.05em;
+        padding-inline: 0;
+        max-width: 100%;
+        overflow-wrap: break-word;
+        word-break: normal;
+        hyphens: manual;
+      }
+      .auth-copy h1 { font-size: clamp(24px, 7vw, 32px); }
       .hero-actions {
         flex-direction: column;
         align-items: stretch;
       }
       .hero-actions .btn { width: 100%; min-height: 48px; }
       .route {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
         margin-left: auto; margin-right: auto;
+        width: 100%;
         max-width: 100%;
-        gap: 8px;
+        gap: 6px;
+        box-sizing: border-box;
       }
-      .route-end { min-width: 56px; }
-      .route-end b { font-size: 12px; }
-      .route-map { height: 64px; min-width: 100px; }
+      .route-end { min-width: 0; }
+      .route-end b { font-size: 12px; letter-spacing: -.02em; }
+      .route-map { height: 56px; min-width: 0; width: 100%; }
       .modes, .how { padding: 12px 0 36px; }
       .cards, .steps { grid-template-columns: 1fr; }
       .split {
@@ -441,8 +459,9 @@
       .nav-actions { gap: 6px; }
       .nav-actions .btn { padding: 10px 10px; font-size: 11px; }
       .nav-actions .btn-bronze { letter-spacing: -.01em; }
-      h1 { word-break: normal; overflow-wrap: anywhere; }
-      .route-end small { letter-spacing: .1em; }
+      h1 { font-size: 25px; }
+      .route-end small { letter-spacing: .08em; }
+      .nav-actions .btn { max-width: 42vw; }
     }
 
     @media (prefers-reduced-motion: reduce) {
